@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Game-Hub Chess — Play Online</title>
+<link rel="stylesheet" href="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:Inter,system-ui,-apple-system,sans-serif;background:#08090b;color:#f5f5f5;min-height:100vh}.nav{height:64px;border-bottom:1px solid #202228;display:flex;align-items:center;justify-content:space-between;padding:0 20px;max-width:1100px;margin:auto}.brand{font-weight:800;letter-spacing:-.5px}.nav a{color:#aeb2bb;text-decoration:none;margin-left:18px;font-size:14px}.nav a:hover{color:#fff}.wrap{width:min(100% - 32px,1000px);margin:0 auto;padding:48px 0}.hero{text-align:center;margin-bottom:36px}.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:2px;color:#8d929d;margin-bottom:10px}.hero h1{font-size:clamp(34px,7vw,62px);letter-spacing:-2.5px;line-height:1.05}.hero p{color:#999faa;margin:14px auto 0;max-width:560px}.card{background:#111318;border:1px solid #24262d;border-radius:20px;padding:24px;box-shadow:0 20px 60px #0005}.setup{max-width:520px;margin:auto}.card h2{font-size:20px;margin-bottom:8px}.muted{color:#969ba5;font-size:14px;margin-bottom:20px}label{display:block;font-size:13px;color:#b7bbc3;margin-bottom:7px}input{width:100%;padding:14px 15px;border-radius:12px;border:1px solid #30333b;background:#0b0c0f;color:#fff;outline:none;font-size:16px}input:focus{border-color:#777}button{border:0;border-radius:12px;padding:13px 17px;background:#fff;color:#08090b;font-weight:750;cursor:pointer;font-size:15px}button.secondary{background:#202228;color:#fff}button:disabled{opacity:.45;cursor:not-allowed}.row{display:flex;gap:10px;flex-wrap:wrap}.row>*{flex:1}.divider{display:flex;align-items:center;gap:12px;color:#626771;margin:22px 0;font-size:12px}.divider:before,.divider:after{content:"";height:1px;background:#292c33;flex:1}.hidden{display:none!important}.room-code{font-size:36px;letter-spacing:7px;text-align:center;font-weight:800;margin:15px 0}.waiting{text-align:center;color:#aaa;font-size:14px}.game{display:grid;grid-template-columns:minmax(300px,560px) 280px;gap:24px;align-items:start}.board-card{padding:14px}.board-shell{width:100%;max-width:560px;margin:auto}.side{display:flex;flex-direction:column;gap:14px}.players{display:grid;gap:8px}.player{border:1px solid #292c33;background:#0c0d10;border-radius:12px;padding:12px;display:flex;justify-content:space-between;align-items:center}.player small{color:#777d87}.status{text-align:center;color:#b9bec7;margin:12px 0;font-size:14px;min-height:21px}.you{font-weight:750;color:#fff}.notice{padding:11px 13px;border-radius:10px;background:#181a20;color:#b8bdc7;font-size:13px}.error{color:#ff8585;min-height:20px;font-size:13px;margin-top:10px}.footer{text-align:center;color:#626771;font-size:12px;margin-top:36px}@media(max-width:800px){.game{grid-template-columns:1fr}.side{order:-1}.wrap{padding-top:30px}.hero{margin-bottom:24px}.card{border-radius:16px;padding:18px}}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="brand">GAME-HUB</div><div><a href="/">Chess</a><a href="/about.html">About</a></div></nav>
+<main class="wrap">
+<section id="setupScreen">
+  <div class="hero"><div class="eyebrow">Online community • Chess</div><h1>Play chess with a real person.</h1><p>No accounts. No complicated setup. Choose a name, create a room or join a friend with a six-character code.</p></div>
+  <div class="card setup">
+    <h2>Enter your player name</h2><p class="muted">This is the name your opponent will see.</p>
+    <label for="nameInput">Player name</label><input id="nameInput" maxlength="20" autocomplete="nickname" placeholder="e.g. Alex">
+    <div class="divider">ROOM</div>
+    <button id="createBtn" style="width:100%">Create a Chess Room</button>
+    <div class="divider">OR</div>
+    <div class="row"><input id="joinCode" maxlength="6" placeholder="Room code" style="text-transform:uppercase"><button id="joinBtn">Join Room</button></div>
+    <div id="error" class="error"></div>
+  </div>
+</section>
+
+<section id="waitingScreen" class="hidden">
+  <div class="hero"><div class="eyebrow">Private chess room</div><h1>Waiting for your opponent.</h1><p>Send this code to the person you want to play.</p></div>
+  <div class="card setup"><div class="muted" style="text-align:center">ROOM CODE</div><div class="room-code" id="roomCode"></div><p class="waiting">Keep this page open. The game starts automatically when the second player joins.</p><div id="waitingName" class="notice" style="margin-top:18px;text-align:center"></div></div>
+</section>
+
+<section id="gameScreen" class="hidden">
+  <div class="game">
+    <div class="card board-card"><div id="board" class="board-shell"></div><div id="status" class="status">Waiting for game…</div></div>
+    <aside class="side">
+      <div class="card"><h2>Players</h2><div class="players" style="margin-top:14px"><div class="player"><span><small>White</small><br><span id="whiteName">—</span></span><span id="whiteYou"></span></div><div class="player"><span><small>Black</small><br><span id="blackName">—</span></span><span id="blackYou"></span></div></div></div>
+      <div class="card"><div id="roomInfo" class="notice"></div><div class="row" style="margin-top:12px"><button id="resignBtn" class="secondary">Resign</button><button id="newGameBtn">New Game</button></div><div id="gameError" class="error"></div></div>
+    </aside>
+  </div>
+</section>
+<div class="footer">Game-Hub Chess • Two players per room • No registration required</div>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
+<script src="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+const socket=io();
+let game=new Chess(),board=null,myColor=null,roomId=null,myName='',opponentName='';
+const $=id=>document.getElementById(id);
+function show(id){['setupScreen','waitingScreen','gameScreen'].forEach(x=>$(x).classList.toggle('hidden',x!==id));}
+function name(){return $('nameInput').value.trim().replace(/\s+/g,' ').slice(0,20)}
+function error(msg,where='error'){ $(where).textContent=msg; setTimeout(()=>$(where).textContent='',5000)}
+$('createBtn').onclick=()=>{const n=name();if(!n)return error('Enter your name first.');myName=n;socket.emit('createRoom',n)};
+$('joinBtn').onclick=()=>{const n=name(),code=$('joinCode').value.trim().toUpperCase();if(!n)return error('Enter your name first.');if(code.length!==6)return error('Enter the 6-character room code.');myName=n;socket.emit('joinRoom',{name:n,code})};
+$('joinCode').oninput=e=>e.target.value=e.target.value.toUpperCase().replace(/[^A-Z0-9]/g,'');
+$('nameInput').onkeydown=e=>{if(e.key==='Enter')$('createBtn').click()};
+socket.on('roomCreated',data=>{roomId=data.code;$('roomCode').textContent=data.code;$('waitingName').textContent=`Playing as ${data.name} • You are White`;show('waitingScreen')});
+socket.on('gameReady',data=>{roomId=data.roomId;myColor=data.myColor;myName=data.myName;opponentName=data.opponentName;show('gameScreen');$('roomInfo').textContent=`Room ${roomId}`;updatePlayers();initBoard()});
+socket.on('gameState',state=>{game.load(state.fen);if(board)board.position(state.fen);updateStatus(state)});
+socket.on('moveAccepted',data=>{game.load(data.fen);if(board)board.position(data.fen);updateStatus(data);if(game.isGameOver())$('resignBtn').disabled=true});
+socket.on('newGameStarted',()=>{$('resignBtn').disabled=false});
+socket.on('gameOver',msg=>{gameOver(msg)});
+socket.on('opponentLeft',msg=>{gameOver(msg)});
+socket.on('serverError',msg=>error(msg,roomId?'gameError':'error'));
+function updatePlayers(){if(myColor==='w'){$('whiteName').textContent=myName;$('blackName').textContent=opponentName;$('whiteYou').textContent='YOU';}else{$('whiteName').textContent=opponentName;$('blackName').textContent=myName;$('blackYou').textContent='YOU';}}
+function initBoard(){if(board)board.destroy();board=Chessboard('board',{draggable:true,position:game.fen(),orientation:myColor==='b'?'black':'white',onDragStart:(source,piece)=>{if(game.game_over()||game.turn()!==myColor)return false;if((myColor==='w'&&piece[0]==='b')||(myColor==='b'&&piece[0]==='w'))return false},onDrop:(source,target)=>{let move;try{move=game.move({from:source,to:target,promotion:'q'})}catch(e){move=null}if(!move)return'snapback';socket.emit('move',{roomId,move:{from:move.from,to:move.to,promotion:move.promotion}});board.position(game.fen());updateStatus({turn:game.turn()})},onSnapEnd:()=>board.position(game.fen())});window.onresize=()=>board.resize();updateStatus({turn:game.turn()})}
+function updateStatus(state={}){const turn=state.turn||game.turn();if(state.status){$('status').textContent=state.status;return}if(game.isCheckmate()){$('status').textContent=`Checkmate — ${turn==='w'?'Black':'White'} wins`;return}if(game.isDraw()){$('status').textContent='Draw';return}$('status').textContent=`${turn==='w'?'White':'Black'} to move${turn===myColor?' — Your turn':''}`}
+function gameOver(msg){$('status').textContent=msg;$('resignBtn').disabled=true}
+$('resignBtn').onclick=()=>{if(confirm('Resign this game?'))socket.emit('resign',roomId)};
+$('newGameBtn').onclick=()=>{socket.emit('newGame',roomId)};
+</script>
+</body>
+</html>
