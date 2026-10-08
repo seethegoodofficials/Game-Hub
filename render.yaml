@@ -1,16 +1,15 @@
-# Exported from Render on 2026-10-08T13:43:43Z
 version: "1"
 projects:
-- name: My project
-  environments:
-  - name: Production
-    services:
-    - type: web
-      name: Game-Hub
-      runtime: node
-      repo: https://github.com/seethegoodofficials/Game-Hub
-      plan: free
-      region: oregon
-      buildCommand: npm install
-      startCommand: node server.js
-      autoDeployTrigger: commit
+  - name: Game-Hub
+    environments:
+      - name: Production
+        services:
+          - type: web
+            name: game-hub
+            runtime: node
+            repo: https://github.com/seethegoodofficials/Game-Hub
+            plan: free
+            region: oregon
+            buildCommand: npm install
+            startCommand: npm start
+            autoDeployTrigger: commit
