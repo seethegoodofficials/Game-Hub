@@ -11,6 +11,6 @@ projects:
       repo: https://github.com/seethegoodofficials/Game-Hub
       plan: free
       region: oregon
-      buildCommand: yarn install
+      buildCommand: npm install
       startCommand: node server.js
       autoDeployTrigger: commit
